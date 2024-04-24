@@ -1,14 +1,15 @@
 import streamlit as st
 import requests
+import pandas as pd
 
 def check_https_status(url):
     try:
         response = requests.head(url, timeout=5)
         status_code = response.status_code
         status_description = get_status_description(status_code)
-        return f"{status_code} {status_description}"
+        return status_code, status_description
     except requests.exceptions.RequestException:
-        return "Erro de conexão"
+        return "Erro de conexão", ""
 
 def get_status_description(status_code):
     status_codes = {
@@ -87,10 +88,14 @@ def main():
 
     if st.button("Verificar"):
         urls_list = urls.split("\n")
+        data = []
         for url in urls_list:
             if url.strip():
-                status = check_https_status(url.strip())
-                st.write(f"{url}: {status}")
+                status_code, status_description = check_https_status(url.strip())
+                data.append({"URL": url, "Status Code": status_code, "Descrição": status_description})
+        
+        df = pd.DataFrame(data)
+        st.write(df)
 
 if __name__ == "__main__":
     main()
