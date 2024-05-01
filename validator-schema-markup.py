@@ -5,7 +5,7 @@ import json
 import spacy
 
 # Carregar o modelo de idioma para análise de entidades
-nlp = spacy.load("pt_core_news_sm")
+nlp = spacy.load("en_core_web_sm")
 
 # Função para exibir o JSON em formato de árvore
 def pretty_print_json(json_str):
