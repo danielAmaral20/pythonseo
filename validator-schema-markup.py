@@ -2,6 +2,18 @@ import streamlit as st
 import requests
 from bs4 import BeautifulSoup
 import json
+import spacy
+from collections import Counter
+import matplotlib.pyplot as plt
+
+# Carregar o modelo de linguagem do spaCy
+nlp = spacy.load("pt_core_news_sm")
+
+# Função para extrair entidades do texto usando spaCy
+def extract_entities(text):
+    doc = nlp(text)
+    entities = [ent.text for ent in doc.ents if ent.label_ != '']
+    return entities
 
 # Função para exibir o JSON em formato de árvore
 def pretty_print_json(json_str):
@@ -46,7 +58,7 @@ def validate_json_syntax(json_str):
         return f"Erro ao analisar JSON: {e}"
 
 # Interface do usuário com Streamlit
-st.title("Validador Schema Markup - SEO")
+st.title("Scraping de JSON em uma Página Web")
 url = st.text_input("Insira a URL da página:")
 if st.button("Executar Scraping"):
     if url:
@@ -58,6 +70,34 @@ if st.button("Executar Scraping"):
                 pretty_print_json(json_block)
                 st.write("Dicas de correção de sintaxe:")
                 st.write(validate_json_syntax(json_block))
+
+            # Processar entidades NLP e gerar gráfico e tabela
+            st.write("Analisando entidades do JSON:")
+            all_entities = []
+            for json_block in json_blocks:
+                parsed_json = json.loads(json_block)
+                for key, value in parsed_json.items():
+                    if isinstance(value, str):
+                        all_entities.extend(extract_entities(value))
+
+            # Contagem de entidades
+            entity_counter = Counter(all_entities)
+            entities, counts = zip(*entity_counter.most_common(10))
+
+            # Gerar gráfico de barras
+            plt.barh(entities, counts)
+            plt.xlabel('Frequência')
+            plt.ylabel('Entidades')
+            plt.title('Entidades mais frequentes no JSON')
+            st.pyplot()
+
+            # Gerar tabela de entidades
+            st.write("Tabela de entidades mais frequentes:")
+            st.write("| Entidade | Frequência |")
+            st.write("| -------- | ---------- |")
+            for entity, count in zip(entities, counts):
+                st.write(f"| {entity} | {count} |")
+
         else:
             st.write("Nenhum trecho JSON encontrado na página.")
     else:
