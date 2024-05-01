@@ -3,7 +3,6 @@ import requests
 from bs4 import BeautifulSoup
 import json
 
-!pip install beautifulsoup4
 # Função para exibir o JSON em formato de árvore
 def pretty_print_json(json_str):
     parsed_json = json.loads(json_str)
