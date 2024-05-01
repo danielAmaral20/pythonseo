@@ -1,11 +1,6 @@
-import subprocess
-
-# Instalação do beautifulsoup4
-subprocess.call(["pip", "install", "beautifulsoup4"])
-
 import streamlit as st
 import requests
-from bs4 import BeautifulSoup
+import BeautifulSoup
 import json
 
 
