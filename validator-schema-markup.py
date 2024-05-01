@@ -34,28 +34,12 @@ def scrape_json_from_url(url):
 
     return json_blocks
 
-# Função para verificar se os campos obrigatórios estão presentes no JSON
-def check_required_fields(json_str):
-    required_fields = ["id", "name", "description", "price"]
-    missing_fields = []
-
-    parsed_json = json.loads(json_str)
-    for field in required_fields:
-        if field not in parsed_json:
-            missing_fields.append(field)
-
-    return missing_fields
-
 # Função para sugerir otimizações no JSON
 def suggest_json_optimizations(json_str):
-    suggestions = []
-
-    # Verificar campos obrigatórios
-    missing_fields = check_required_fields(json_str)
-    if missing_fields:
-        suggestions.append("Adicionar os seguintes campos obrigatórios: {}".format(", ".join(missing_fields)))
-
-    return suggestions
+    # Implemente suas sugestões de otimizações aqui
+    # Por exemplo, você pode verificar se algum campo obrigatório está faltando
+    # Ou se algum campo pode ser adicionado para fornecer mais informações
+    pass
 
 # Interface do usuário com Streamlit
 st.title("Scraping de JSON em uma Página Web")
@@ -68,11 +52,7 @@ if st.button("Executar Scraping"):
             st.write("Trechos JSON encontrados:")
             for json_block in json_blocks:
                 pretty_print_json(json_block)
-                suggestions = suggest_json_optimizations(json_block)
-                if suggestions:
-                    st.write("Sugestões de otimização:")
-                    for suggestion in suggestions:
-                        st.write("-", suggestion)
+                suggest_json_optimizations(json_block)
         else:
             st.write("Nenhum trecho JSON encontrado na página.")
     else:
