@@ -34,6 +34,19 @@ def scrape_json_from_url(url):
 
     return json_blocks
 
+# Função para gerar o preview de dados estruturados nos resultados do Google
+def generate_google_preview(json_block):
+    preview = ""
+    parsed_json = json.loads(json_block)
+
+    # Para cada tipo de dados estruturados encontrado
+    for key, value in parsed_json.items():
+        # Monta o snippet de preview para o tipo de dados estruturados
+        snippet = f'<script type="application/ld+json">{json.dumps({key: value}, indent=4)}</script>'
+        preview += snippet + "\n\n"
+
+    return preview
+
 # Interface do usuário com Streamlit
 st.title("Scraping de JSON em uma Página Web")
 url = st.text_input("Insira a URL da página:")
@@ -45,6 +58,9 @@ if st.button("Executar Scraping"):
             st.write("Trechos JSON encontrados:")
             for json_block in json_blocks:
                 pretty_print_json(json_block)
+                google_preview = generate_google_preview(json_block)
+                st.markdown("### Preview nos resultados do Google:")
+                st.code(google_preview, language="html")
         else:
             st.write("Nenhum trecho JSON encontrado na página.")
     else:
