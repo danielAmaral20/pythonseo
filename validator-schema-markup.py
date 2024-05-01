@@ -17,7 +17,7 @@ def scrape_json_from_url(url):
     soup = BeautifulSoup(response.content, "html.parser")
 
     # Encontrando todos os trechos de código
-    code_blocks = soup.find_all("code")
+    code_blocks = soup.find_all("script", type="application/ld+json")
 
     # Lista para armazenar os trechos de código JSON
     json_blocks = []
@@ -26,20 +26,13 @@ def scrape_json_from_url(url):
     for code_block in code_blocks:
         # Verificando se o trecho de código parece ser JSON
         try:
-            json_data = json.loads(code_block.text)
+            json_data = json.loads(code_block.string)
             # Se o JSON foi carregado corretamente, adiciona à lista
             json_blocks.append(json.dumps(json_data, indent=4))
         except ValueError:
             pass
 
     return json_blocks
-
-# Função para sugerir otimizações no JSON
-def suggest_json_optimizations(json_str):
-    # Implemente suas sugestões de otimizações aqui
-    # Por exemplo, você pode verificar se algum campo obrigatório está faltando
-    # Ou se algum campo pode ser adicionado para fornecer mais informações
-    pass
 
 # Interface do usuário com Streamlit
 st.title("Scraping de JSON em uma Página Web")
@@ -52,7 +45,6 @@ if st.button("Executar Scraping"):
             st.write("Trechos JSON encontrados:")
             for json_block in json_blocks:
                 pretty_print_json(json_block)
-                suggest_json_optimizations(json_block)
         else:
             st.write("Nenhum trecho JSON encontrado na página.")
     else:
