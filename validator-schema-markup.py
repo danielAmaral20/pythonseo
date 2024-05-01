@@ -1,7 +1,13 @@
+import subprocess
+
+# Instalação do beautifulsoup4
+subprocess.call(["pip", "install", "beautifulsoup4"])
+
 import streamlit as st
 import requests
 from bs4 import BeautifulSoup
 import json
+
 
 # Função para exibir o JSON em formato de árvore
 def pretty_print_json(json_str):
