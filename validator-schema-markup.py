@@ -17,7 +17,7 @@ def scrape_json_from_url(url):
     soup = BeautifulSoup(response.content, "html.parser")
 
     # Encontrando todos os trechos de código
-    code_blocks = soup.find_all("code")
+    code_blocks = soup.find_all("script", type="application/ld+json")
 
     # Lista para armazenar os trechos de código JSON
     json_blocks = []
@@ -26,7 +26,7 @@ def scrape_json_from_url(url):
     for code_block in code_blocks:
         # Verificando se o trecho de código parece ser JSON
         try:
-            json_data = json.loads(code_block.text)
+            json_data = json.loads(code_block.string)
             # Se o JSON foi carregado corretamente, adiciona à lista
             json_blocks.append(json.dumps(json_data, indent=4))
         except ValueError:
