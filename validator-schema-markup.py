@@ -2,6 +2,7 @@ import streamlit as st
 import requests
 from bs4 import BeautifulSoup
 import json
+from collections import Counter
 
 # Função para exibir o JSON em formato de árvore
 def pretty_print_json(json_str):
@@ -34,6 +35,17 @@ def scrape_json_from_url(url):
 
     return json_blocks
 
+# Função para verificar os tipos de dados estruturados e a quantidade de informações de cada tipo
+def analyze_json_types(json_blocks):
+    data_types = Counter()
+
+    for json_block in json_blocks:
+        parsed_json = json.loads(json_block)
+        data_type = type(parsed_json).__name__
+        data_types[data_type] += 1
+
+    return data_types
+
 # Interface do usuário com Streamlit
 st.title("Scraping de JSON em uma Página Web")
 url = st.text_input("Insira a URL da página:")
@@ -45,6 +57,11 @@ if st.button("Executar Scraping"):
             st.write("Trechos JSON encontrados:")
             for json_block in json_blocks:
                 pretty_print_json(json_block)
+            
+            data_types = analyze_json_types(json_blocks)
+            st.write("Tipos de dados estruturados e suas quantidades:")
+            for data_type, count in data_types.items():
+                st.write(f"{data_type}: {count}")
         else:
             st.write("Nenhum trecho JSON encontrado na página.")
     else:
