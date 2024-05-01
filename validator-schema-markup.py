@@ -1,11 +1,7 @@
-import streamlit as st
+ import streamlit as st
 import requests
 from bs4 import BeautifulSoup
 import json
-import spacy
-
-# Carregar o modelo de idioma para análise de entidades
-nlp = spacy.load("en_core_web_sm")
 
 # Função para exibir o JSON em formato de árvore
 def pretty_print_json(json_str):
@@ -49,12 +45,6 @@ def validate_json_syntax(json_str):
     except json.JSONDecodeError as e:
         return f"Erro ao analisar JSON: {e}"
 
-# Função para analisar entidades no texto usando spaCy
-def analyze_entities(text):
-    doc = nlp(text)
-    entities = [(ent.text, ent.label_) for ent in doc.ents]
-    return entities
-
 # Interface do usuário com Streamlit
 st.title("Scraping de JSON em uma Página Web")
 url = st.text_input("Insira a URL da página:")
@@ -68,10 +58,6 @@ if st.button("Executar Scraping"):
                 pretty_print_json(json_block)
                 st.write("Dicas de correção de sintaxe:")
                 st.write(validate_json_syntax(json_block))
-                st.write("Entidades encontradas:")
-                entities = analyze_entities(json_block)
-                for entity, label in entities:
-                    st.write(f"- {entity} ({label})")
         else:
             st.write("Nenhum trecho JSON encontrado na página.")
     else:
