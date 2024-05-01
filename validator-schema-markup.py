@@ -46,7 +46,7 @@ def validate_json_syntax(json_str):
         return f"Erro ao analisar JSON: {e}"
 
 # Interface do usuário com Streamlit
-st.title("Scraping de JSON em uma Página Web")
+st.title("Análise Dados Estruturados - SEO")
 url = st.text_input("Insira a URL da página:")
 if st.button("Executar Scraping"):
     if url:
