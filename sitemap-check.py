@@ -48,7 +48,8 @@ def parse_sitemap(sitemap_url):
     return urls
 
 def main():
-    st.title("Verificador de Status Code, Meta Noindex e Canonical do Sitemap")
+    st.title("Verificador de Sitemap XML - SEO")
+    st.subtitle("Validando Noindex & Canonical TAG)
 
     sitemap_url = st.text_input("Insira a URL do sitemap.xml")
 
