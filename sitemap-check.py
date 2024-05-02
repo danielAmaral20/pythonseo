@@ -58,7 +58,7 @@ def main():
             try:
                 urls = parse_sitemap(sitemap_url)
                 main_status_code, results = check_urls(urls)
-                df = pd.DataFrame(results, columns=["URL", "Status Code", "Possui Noindex", "Canonical Correspondente", "Canonical Diferente"])
+                df = pd.DataFrame(results, columns=["URL", "Status Code", "Noindex", "Canonical Correspondente", "Canonical Diferente"])
                 
                 # Mapeando valores booleanos para strings descritivas
                 df["Possui Noindex"] = df["Possui Noindex"].map({True: "Possui Noindex", False: "Não possui Noindex"})
