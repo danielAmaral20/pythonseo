@@ -61,7 +61,7 @@ def main():
                 df = pd.DataFrame(results, columns=["URL", "Status Code", "Noindex", "Canonical Correspondente", "Canonical Diferente"])
                 
                 # Mapeando valores booleanos para strings descritivas
-                df["Possui Noindex"] = df["Possui Noindex"].map({True: "Possui Noindex", False: "Não possui Noindex"})
+                df["Noindex"] = df["Noindex"].map({True: "Possui Noindex", False: "Não possui Noindex"})
                 df["Canonical Correspondente"] = df["Canonical Correspondente"].map({True: "Correspondente", False: "Diferente"})
                 
                 st.write("Status Code encontrados:", main_status_code)
