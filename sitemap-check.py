@@ -11,20 +11,28 @@ def check_urls(urls):
             response = requests.get(url)
             status_code = response.status_code
             soup = BeautifulSoup(response.content, 'html.parser')
-            meta_index_tag = soup.find("meta", {"name": "robots", "content": "index"})
+            meta_index_tag = soup.find("meta", {"name": "robots", "content": "noindex"})
             canonical_tag = soup.find("link", {"rel": "canonical"})
+            
             if meta_index_tag:
-                has_index_tag = True
+                has_noindex_tag = True
             else:
-                has_index_tag = False
+                has_noindex_tag = False
+                
             if canonical_tag:
                 canonical_url = canonical_tag.get("href")
                 canonical_match = canonical_url == url
+                if not canonical_match:
+                    canonical_url_diff = canonical_url
+                else:
+                    canonical_url_diff = ""
             else:
                 canonical_match = False
-            results.append((url, status_code, has_index_tag, canonical_match))
+                canonical_url_diff = ""
+
+            results.append((url, status_code, has_noindex_tag, canonical_match, canonical_url_diff))
         except Exception as e:
-            results.append((url, str(e), False, False))
+            results.append((url, str(e), False, False, ""))
     return results
 
 def parse_sitemap(sitemap_url):
@@ -34,7 +42,7 @@ def parse_sitemap(sitemap_url):
     return urls
 
 def main():
-    st.title("Verificador de Status Code, Meta Index e Canonical do Sitemap")
+    st.title("Verificador de Status Code, Meta Noindex e Canonical do Sitemap")
 
     sitemap_url = st.text_input("Insira a URL do sitemap.xml")
 
@@ -43,7 +51,12 @@ def main():
             try:
                 urls = parse_sitemap(sitemap_url)
                 results = check_urls(urls)
-                df = pd.DataFrame(results, columns=["URL", "Status Code", "Possui Meta Index", "Canonical Correspondente"])
+                df = pd.DataFrame(results, columns=["URL", "Status Code", "Possui Noindex", "Canonical Correspondente", "Canonical Diferente"])
+                
+                # Mapeando valores booleanos para strings descritivas
+                df["Possui Noindex"] = df["Possui Noindex"].map({True: "Possui Noindex", False: "Não possui Noindex"})
+                df["Canonical Correspondente"] = df["Canonical Correspondente"].map({True: "Correspondente", False: "Diferente"})
+                
                 st.write(df)
             except Exception as e:
                 st.error(f"Erro ao processar o sitemap: {e}")
