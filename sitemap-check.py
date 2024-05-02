@@ -63,7 +63,7 @@ def main():
                 df["Possui Noindex"] = df["Possui Noindex"].map({True: "Possui Noindex", False: "Não possui Noindex"})
                 df["Canonical Correspondente"] = df["Canonical Correspondente"].map({True: "Correspondente", False: "Diferente"})
                 
-                st.write("Status Code da URL principal:", main_status_code)
+                st.write("Status Code encontrados:", main_status_code)
                 st.write(df)
             except Exception as e:
                 st.error(f"Erro ao processar o sitemap: {e}")
