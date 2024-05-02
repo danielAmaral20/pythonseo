@@ -1,3 +1,2 @@
 beautifulsoup4
-xml.etree.ElementTree
 pandas
