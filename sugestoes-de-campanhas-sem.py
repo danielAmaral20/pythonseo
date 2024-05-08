@@ -7,17 +7,17 @@ def generate_campaigns(products, words):
     return kw_df
 
 def main():
-    st.title("Gerador de Sugestões de Campanhas SEM - Mídia Paga")
+    st.title("Gerador de Sugestões de Campanhas SEM")
     
-    st.write("Insira os termos relacionados ao produto foco da campanha:")
+    st.write("Insira os termos relacionados ao produto:")
     products_input = st.text_area("Termos relacionados ao produto (separados por vírgula)")
     products = [p.strip() for p in products_input.split(",") if p.strip()]
     
-    st.write("Insira as palavras semanticamente relacionadas:")
+    st.write("Insira as palavras relacionadas:")
     words_input = st.text_area("Palavras relacionadas (separadas por vírgula)")
     words = [w.strip() for w in words_input.split(",") if w.strip()]
     
-  if st.button("Gerar Sugestões de Campanhas"):
+    if st.button("Gerar Sugestões de Campanhas"):
         if not products or not words:
             st.warning("Por favor, insira pelo menos um termo relacionado ao produto e uma palavra.")
         else:
