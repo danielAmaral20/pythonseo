@@ -21,13 +21,13 @@ def main():
         if 'Table' in sheets:
             table_df = sheets['Table']
             
-            # Top 10 URLs mais requisitadas com botão para visualização
+            # Top 10 URLs mais requisitadas
             top_urls = table_df['URL'].value_counts().head(10)
-            st.subheader('Top 10 URLs mais requisitadas:')
-            for idx, (url, count) in enumerate(top_urls.items(), start=1):
-                show_url = st.button(f'{idx}. Clique para mostrar a URL')
-                if show_url:
-                    st.write(url)
+            
+            # Botão para mostrar as top 10 URLs
+            if st.button('Mostrar Top 10 URLs mais requisitadas'):
+                st.subheader('Top 10 URLs mais requisitadas:')
+                st.write(top_urls)
 
             # Dia com mais solicitações
             table_df['Time'] = pd.to_datetime(table_df['Time'])
@@ -64,6 +64,10 @@ def main():
                 peak_day_index = chart_df[metric].idxmax()
                 peak_day = chart_df.loc[peak_day_index, 'Date']
                 
+                # Texto informativo sobre o pico
+                st.markdown(f"**Pico em {metric}:** {peak_day.strftime('%d/%m/%Y')}")
+
+                # Gráfico
                 fig, ax = plt.subplots()
                 ax.plot(chart_df['Date'], chart_df[metric], marker='o', linestyle='-', color='b', label=metric)
                 ax.axvline(x=peak_day, color='red', linestyle='--', label=f'Dia com pico em {metric}')
