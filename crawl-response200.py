@@ -5,8 +5,8 @@ import pandas as pd
 @st.cache
 def load_data(file_path):
     # Carregar dados das duas abas
-    chart_data = pd.read_excel(file_path, sheet_name='Chart Date')
-    table_data = pd.read_excel(file_path, sheet_name='Table Time')
+    chart_data = pd.read_excel(file_path, sheet_name='Chart')
+    table_data = pd.read_excel(file_path, sheet_name='Table')
     return chart_data, table_data
 
 # Função para gerar insights
