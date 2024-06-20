@@ -56,7 +56,7 @@ def main():
             best_day_index = chart_df['Total crawl requests'].idxmax()
             best_day = chart_df.loc[best_day_index, 'Date']
             best_day_weekday = best_day.strftime('%A')  # Dia da semana
-            st.subheader(f'Melhor dia para atualizar/publicar conteúdo: {best_day.strftime("%d/%m/%Y")} ({best_day_weekday})')
+            st.subheader(f'Melhor dia para atualizar/publicar conteúdo: ({best_day_weekday})')
 
             # Gráfico de desempenho em torno dos dias de pico
             metrics = ['Total crawl requests', 'Total download size (Bytes)', 'Average response time (ms)']
