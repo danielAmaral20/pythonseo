@@ -16,24 +16,24 @@ def main():
     file_path = st.file_uploader('Carregar planilha Excel', type=['xlsx'])
     if file_path is not None:
         sheets = load_data(file_path)
-       
+        
         # Análise da aba "Table"
         if 'Table' in sheets:
             table_df = sheets['Table']
-           
+            
             # Top 10 URLs mais requisitadas com botão para visualização
             top_urls = table_df['URL'].value_counts().head(10)
             st.subheader('Top 10 URLs mais requisitadas:')
             for idx, (url, count) in enumerate(top_urls.items(), start=1):
-                expander = st.beta_expander(f'{idx}. URL (Clique para visualizar)')
-                with expander:
+                show_url = st.button(f'{idx}. Clique para mostrar a URL')
+                if show_url:
                     st.write(url)
 
             # Dia com mais solicitações
             table_df['Time'] = pd.to_datetime(table_df['Time'])
             day_with_most_requests = table_df['Time'].dt.date.value_counts().idxmax()
             st.subheader(f'Dia com mais solicitações: {day_with_most_requests}')
-           
+            
             # Gráfico de desempenho dos dias em torno do dia com mais solicitações
             fig, ax = plt.subplots()
             request_counts = table_df['Time'].dt.date.value_counts()
@@ -51,7 +51,7 @@ def main():
         if 'Chart' in sheets:
             chart_df = sheets['Chart']
             chart_df['Date'] = pd.to_datetime(chart_df['Date'])
-           
+            
             # Melhor dia para atualizar ou publicar conteúdo
             best_day_index = chart_df['Total crawl requests'].idxmax()
             best_day = chart_df.loc[best_day_index, 'Date']
@@ -63,7 +63,7 @@ def main():
             for metric in metrics:
                 peak_day_index = chart_df[metric].idxmax()
                 peak_day = chart_df.loc[peak_day_index, 'Date']
-               
+                
                 fig, ax = plt.subplots()
                 ax.plot(chart_df['Date'], chart_df[metric], marker='o', linestyle='-', color='b', label=metric)
                 ax.axvline(x=peak_day, color='red', linestyle='--', label=f'Dia com pico em {metric}')
@@ -72,6 +72,7 @@ def main():
                 ax.set_title(f'Desempenho em torno do pico em {metric}')
                 ax.legend()
                 st.pyplot(fig)
+
     else:
         st.write('Por favor, carregue um arquivo Excel.')
 
