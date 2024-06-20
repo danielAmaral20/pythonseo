@@ -11,7 +11,7 @@ def load_data(file_path):
     return sheets
 
 def main():
-    st.title('Análise de Dados de Rastreamento')
+    st.title('Análise de Crawl Request: OK (200) - GSC')
 
     file_path = st.file_uploader('Carregar planilha Excel', type=['xlsx'])
     if file_path is not None:
