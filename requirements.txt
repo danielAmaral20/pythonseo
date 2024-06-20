@@ -3,3 +3,4 @@ pandas
 advertools
 scikit-learn
 openpyxl
+matplotlib
