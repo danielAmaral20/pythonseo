@@ -1,7 +1,6 @@
 import streamlit as st
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
-import httplib2
 
 # Função para autenticação e conexão com o Google Search Console
 def authenticate_gsc(client_id, client_secret, oauth_scope, redirect_uri):
@@ -16,10 +15,9 @@ def authenticate_gsc(client_id, client_secret, oauth_scope, redirect_uri):
         }
     }, [oauth_scope])
     
-    credentials = flow.run_local_server(port=0)
-    service = build('searchconsole', 'v1', credentials=credentials)
-    
-    return service
+    # Exibe o link de autenticação manual no Streamlit
+    auth_url, _ = flow.authorization_url(prompt='consent')
+    return auth_url, flow
 
 # Função para buscar a lista de sites conectados
 def get_site_list(service):
@@ -36,14 +34,28 @@ REDIRECT_URI = "https://seodatainsights.streamlit.app/"
 # Interface do Streamlit
 st.title("Google Search Console Analyzer")
 
-# Autenticação e conexão com a API
-with st.spinner("Autenticando com o Google Search Console..."):
-    service = authenticate_gsc(CLIENT_ID, CLIENT_SECRET, OAUTH_SCOPE, REDIRECT_URI)
+# Botão para iniciar a autenticação
+if "auth_flow" not in st.session_state:
+    st.session_state.auth_flow = None
 
-# Obtenção da lista de sites
-sites = get_site_list(service)
+if st.button("Conectar com Google Search Console"):
+    auth_url, flow = authenticate_gsc(CLIENT_ID, CLIENT_SECRET, OAUTH_SCOPE, REDIRECT_URI)
+    st.session_state.auth_flow = flow
+    st.write(f"Autentique-se visitando o seguinte link: [Login Google]({auth_url})")
 
-# Dropdown para seleção de site
-selected_site = st.selectbox("Selecione um site para análise:", sites)
+# Input para o código de autenticação
+auth_code = st.text_input("Digite o código de autenticação:")
 
-st.write(f"Você selecionou: {selected_site}")
+# Conexão após a autenticação
+if auth_code and st.session_state.auth_flow:
+    flow = st.session_state.auth_flow
+    flow.fetch_token(code=auth_code)
+    service = build('searchconsole', 'v1', credentials=flow.credentials)
+
+    # Obtenção da lista de sites
+    sites = get_site_list(service)
+
+    # Dropdown para seleção de site
+    selected_site = st.selectbox("Selecione um site para análise:", sites)
+
+    st.write(f"Você selecionou: {selected_site}")
