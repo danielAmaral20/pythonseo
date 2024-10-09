@@ -38,10 +38,10 @@ def get_site_list(service):
     return all_sites
 
 # Parâmetros de autenticação (insira suas credenciais)
-CLIENT_ID = "seu_client_id"
-CLIENT_SECRET = "seu_client_secret"
+CLIENT_ID = "1034169525900-rst8a3hkncdr2d0kad22an6pvvnvhlin.apps.googleusercontent.com"
+CLIENT_SECRET = "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"
 OAUTH_SCOPE = "https://www.googleapis.com/auth/webmasters.readonly"
-REDIRECT_URI = "urn:ietf:wg:oauth:2.0:oob"
+REDIRECT_URI = "https://seodatainsights.streamlit.app/"
 
 # Interface do Streamlit
 st.title("Google Search Console Analyzer")
