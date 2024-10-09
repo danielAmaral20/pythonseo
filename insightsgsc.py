@@ -15,18 +15,20 @@ def authenticate_gsc(client_id, client_secret, oauth_scope, redirect_uri):
         }
     }, [oauth_scope])
     
+    # Exibe o link de autenticação manual no Streamlit
     auth_url, _ = flow.authorization_url(prompt='consent')
-
-    # Exibe o link de autenticação no Streamlit para copiar e colar manualmente
     st.write("Autentique-se visitando o seguinte link:")
     st.write(auth_url)
-    
+
+    # Solicita o código de autenticação
     auth_code = st.text_input("Digite o código de autenticação:")
-    
+
     if auth_code:
+        # Faz o fetch do token usando o código de autenticação
         flow.fetch_token(code=auth_code)
         service = build('searchconsole', 'v1', credentials=flow.credentials)
         return service
+
     return None
 
 # Função para buscar a lista de sites conectados
